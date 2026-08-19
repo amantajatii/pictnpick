@@ -7,7 +7,7 @@ import { Card, PrimaryButton, SectionContainer, SectionHeading } from "./ui";
 /* Section 13: Lead Form — Acquisition (tanpa backend, simulasi submit) */
 
 const WHATSAPP_URL =
-  "https://wa.me/628xxxxxxxxxx?text=Halo%20Pict%20n%20Pick,%20saya%20tertarik%20kerja%20sama%20untuk%20kafe%20saya";
+  "https://wa.me/6285727322686?text=Halo%20Pict%20n%20Pick,%20saya%20tertarik%20kerja%20sama%20untuk%20kafe%20saya";
 
 const initialForm = {
   nama: "",

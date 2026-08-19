@@ -23,6 +23,9 @@ export default function ProductPhotobox() {
           />
 
           <Card>
+            <p className="text-sm text-ink/60">Harga customer</p>
+            <p className="mt-1 text-2xl font-bold text-orange">Rp30.000 / sesi</p>
+            <div className="my-5 h-px bg-ink/10" />
             <p className="mb-3 font-semibold text-ink">Cocok untuk:</p>
             <ul className="flex flex-wrap gap-2">
               {cocokUntuk.map((item) => (
@@ -37,8 +40,8 @@ export default function ProductPhotobox() {
           </Card>
 
           <div className="mt-6">
-            <PrimaryButton href="#lead-form">
-              Diskusikan Penempatan Photobox
+            <PrimaryButton href="/payment-demo">
+              Beli Voucher Photobox
             </PrimaryButton>
           </div>
         </div>
