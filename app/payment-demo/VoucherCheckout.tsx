@@ -3,7 +3,20 @@
 import { useState } from "react";
 import { Check, Ticket } from "lucide-react";
 import Link from "next/link";
+import Script from "next/script";
+import { openDuitkuPopup } from "../_lib/duitku.mjs";
 import { vouchers } from "../_lib/vouchers.mjs";
+
+type DuitkuResult = { resultCode: string };
+type DuitkuCheckout = {
+  process: (reference: string, options: Record<string, unknown>) => void;
+};
+
+declare global {
+  interface Window {
+    checkout?: DuitkuCheckout;
+  }
+}
 
 const formatRupiah = (amount: number) =>
   new Intl.NumberFormat("id-ID", {
@@ -17,6 +30,7 @@ export default function VoucherCheckout() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [isDuitkuReady, setIsDuitkuReady] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const selectedVoucher = vouchers.find((voucher) => voucher.id === selectedId)!;
 
@@ -30,8 +44,20 @@ export default function VoucherCheckout() {
         body: JSON.stringify({ voucherId: selectedId, name, email }),
       });
       const result = await response.json();
-      if (!response.ok || !result.paymentUrl) throw new Error(result.error);
-      window.location.assign(result.paymentUrl);
+      if (!response.ok || !result.reference) throw new Error(result.error);
+      if (!window.checkout) throw new Error("Duitku belum siap. Silakan coba lagi.");
+
+      const showStatus = ({ resultCode }: DuitkuResult) =>
+        window.location.assign(`/payment-demo/status?resultCode=${resultCode}`);
+      openDuitkuPopup(window.checkout, result.reference, {
+        successEvent: showStatus,
+        pendingEvent: showStatus,
+        errorEvent: () => {
+          setError("Pembayaran gagal diproses.");
+          setIsSubmitting(false);
+        },
+        closeEvent: () => setIsSubmitting(false),
+      });
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : "Checkout belum dapat dimulai.");
       setIsSubmitting(false);
@@ -40,6 +66,11 @@ export default function VoucherCheckout() {
 
   return (
     <main className="min-h-screen bg-cream px-4 py-12 text-ink sm:py-20">
+      <Script
+        src="https://app-sandbox.duitku.com/lib/js/duitku.js"
+        onReady={() => setIsDuitkuReady(true)}
+        onError={() => setError("Duitku gagal dimuat. Muat ulang halaman ini.")}
+      />
       <div className="mx-auto max-w-2xl">
         <Link href="/" className="text-sm font-semibold text-orange-600 hover:underline">
           ← Kembali ke Pict n Pick
@@ -108,8 +139,8 @@ export default function VoucherCheckout() {
               placeholder="Email"
             />
           </div>
-          <button type="button" onClick={handleCheckout} disabled={isSubmitting} className="mt-4 w-full rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange disabled:cursor-wait disabled:opacity-60">
-            {isSubmitting ? "Mengarahkan ke Duitku..." : "Bayar dengan Duitku Sandbox"}
+          <button type="button" onClick={handleCheckout} disabled={isSubmitting || !isDuitkuReady} className="mt-4 w-full rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange disabled:cursor-wait disabled:opacity-60">
+            {!isDuitkuReady ? "Menyiapkan Duitku..." : isSubmitting ? "Membuka Duitku..." : "Bayar dengan Duitku Sandbox"}
           </button>
           {error && <p role="alert" className="mt-3 text-center text-sm text-red-600">{error}</p>}
           <p className="mt-4 text-center text-xs leading-relaxed text-ink/55">

@@ -36,7 +36,7 @@ export default function Footer() {
 
                 <div className="mt-10 border-t border-white/10 pt-8">
                     <p className="text-sm text-white/70">
-                        Pembayaran layanan Photoreceipt diproses melalui aplikasi VizReceipt menggunakan payment gateway Duitku. Seluruh transaksi menggunakan Rupiah (IDR).
+                        Voucher sesi Photoreceipt dan Photobox dapat dibeli melalui website menggunakan payment gateway Duitku. Seluruh transaksi menggunakan Rupiah (IDR).
                     </p>
                 </div>
 

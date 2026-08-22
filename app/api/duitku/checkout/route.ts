@@ -50,12 +50,12 @@ export async function POST(request: Request) {
   });
   const result = await response.json().catch(() => null);
 
-  if (!response.ok || !result?.paymentUrl) {
+  if (!response.ok || !result?.reference) {
     return NextResponse.json(
       { error: result?.Message ?? result?.message ?? "Duitku Sandbox belum dapat membuat pembayaran." },
       { status: 502 },
     );
   }
 
-  return NextResponse.json({ paymentUrl: `${result.paymentUrl}&lang=id` });
+  return NextResponse.json({ reference: result.reference });
 }
