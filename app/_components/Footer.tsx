@@ -21,7 +21,7 @@ export default function Footer() {
                         </a>
                         <a href="https://wa.me/6285727322686" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/80 transition hover:text-orange">
                             <MessageCircle className="h-4 w-4" />
-                            WhatsApp: +62 857-2732-2686
+                            WhatsApp: +62 857-2732-2686 (Zalsa)
                         </a>
                         <a href="mailto:pictnpick@gmail.com" className="flex items-center gap-2 text-white/80 transition hover:text-orange">
                             <Mail className="h-4 w-4" />
